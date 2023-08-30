@@ -36,7 +36,7 @@ if uploaded_file:
     st.write(data)
 
     # User input for analysis request
-    analysis_request = "Write a working python code that creates a matplot figure object and plot it with st.pyplot(fig). Only write the python code and nothing else: " + data.to_string(index=False) + "Only write the python code and nothing else."
+    analysis_request = "Write a working python code that creates a matplot figure object and plot it with st.pyplot(fig). Only write the python code and nothing else for the following data: " + data.to_string(index=False) + "Only write the python code and nothing else."
 
     if st.button("Generate Analysis Code"):
         # Create a conversation with a system message and user message
