@@ -26,7 +26,7 @@ if uploaded_file:
     st.write(data)
 
     # User input for analysis request
-    analysis_request = "Write a working python code that analyses and visualizes the data with matplotlib.pyplot as plt. Only write the python code and nothing else: " + data.to_string(index=False)
+    analysis_request = "Write a working python code that analyses and visualizes the data with matplotlib.pyplot as plt. Only write the python code and nothing else: " + data.to_string(index=False) + "Only write the python code and nothing else."
 
     if st.button("Generate Analysis Code"):
         # Create a conversation with a system message and user message
