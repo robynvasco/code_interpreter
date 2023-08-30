@@ -14,6 +14,16 @@ st.write("Upload a CSV or Excel file for analysis.")
 # File upload
 uploaded_file = st.file_uploader("Upload a file", type=["csv", "xlsx"])
 
+
+data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+data2 = [3, 4, 5, 6, 7, 2, 4, 345, 4, 54, 7, 6, 658, 1]
+
+plt.plot(data1, data2)
+plt.xlabel('Data 1')
+plt.ylabel('Data 2')
+plt.title('Data Analysis')
+st.pyplot(plt.plot(data1, data2))
+
 if uploaded_file:
     # Load data
     if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
@@ -26,7 +36,7 @@ if uploaded_file:
     st.write(data)
 
     # User input for analysis request
-    analysis_request = "Write a working python code that analyses and visualizes the data with matplotlib.pyplot as plt. Only write the python code and nothing else: " + data.to_string(index=False) + "Only write the python code and nothing else."
+    analysis_request = "Write a working python code that creates a matplot figure object and plot it with st.pyplot(fig). Only write the python code and nothing else: " + data.to_string(index=False) + "Only write the python code and nothing else."
 
     if st.button("Generate Analysis Code"):
         # Create a conversation with a system message and user message
