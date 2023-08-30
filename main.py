@@ -1,6 +1,10 @@
 import streamlit as st
 import pandas as pd
-import requests
+import openai
+import os
+
+# Set your OpenAI API key
+openai.api_key = os.getenv("OPENAI_KEY")
 
 # Title and description
 st.title("Data Analysis App")
@@ -20,18 +24,29 @@ if uploaded_file:
     st.subheader("Raw Data")
     st.write(data)
 
-    # Send data to the API for analysis
-    api_url = "YOUR_API_URL_HERE"
-    response = requests.post(api_url, json={"data": data.to_dict()})
-    analysis_code = response.json().get("analysis_code")
+    # User input for analysis request
+    analysis_request = st.text_input("Request for Analysis:", "")
 
-    # Display the analysis code
-    st.subheader("Analysis Code")
-    st.code(analysis_code)
+    if st.button("Generate Analysis Code"):
+        # Create a conversation with a system message and user message
+        conversation = [
+            {"role": "system", "content": "You are a data analysis assistant and give only the working code for the python script that could analyse and if possible visualize the data."},
+            {"role": "user", "content": analysis_request}
+        ]
 
-    # Execute the analysis code
-    try:
-        exec(analysis_code)
-    except Exception as e:
-        st.error(f"Error executing analysis code: {str(e)}")
+        # Send the conversation to the GPT-3 API to generate analysis code
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=conversation
+        )
 
+        # Extract and display the analysis code
+        analysis_code = response.choices[0].message["content"]
+        st.subheader("Generated Analysis Code:")
+        st.code(analysis_code, language="python")
+
+        # Execute the analysis code
+        try:
+            exec(analysis_code)
+        except Exception as e:
+            st.error(f"Error executing analysis code: {str(e)}")
