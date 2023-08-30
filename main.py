@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import openai
 import os
+import matplotlib.pyplot as plt
 
 # Set your OpenAI API key
 openai.api_key = os.getenv("OPENAI_KEY")
@@ -25,12 +26,12 @@ if uploaded_file:
     st.write(data)
 
     # User input for analysis request
-    analysis_request = st.text_input("Request for Analysis:", "")
+    analysis_request = "Write a working python code that analyses and visualizes the data with matplotlib.pyplot as plt. Only write the python code and nothing else: " + data.to_string(index=False)
 
     if st.button("Generate Analysis Code"):
         # Create a conversation with a system message and user message
         conversation = [
-            {"role": "system", "content": "You are a data analysis assistant and give only the working code for the python script that could analyse and if possible visualize the data."},
+            {"role": "system", "content": "You are a data analysis expert."},
             {"role": "user", "content": analysis_request}
         ]
 
