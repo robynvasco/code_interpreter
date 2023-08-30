@@ -1,0 +1,5 @@
+streamlit  # You can specify the Streamlit version you need
+pandas==1.3.3       # Data manipulation library
+requests==2.26.0    # HTTP library for making API requests
+openpyxl==3.0.9     # For handling Excel files
+matplotlib==3.4.3   # For data visualization
