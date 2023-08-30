@@ -18,11 +18,15 @@ uploaded_file = st.file_uploader("Upload a file", type=["csv", "xlsx"])
 data1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 data2 = [3, 4, 5, 6, 7, 2, 4, 345, 4, 54, 7, 6, 658, 1]
 
-plt.plot(data1, data2)
-plt.xlabel('Data 1')
-plt.ylabel('Data 2')
-plt.title('Data Analysis')
-st.pyplot(plt.plot(data1, data2))
+# Create a Matplotlib figure and axis
+fig, ax = plt.subplots()
+ax.plot(data1, data2)
+ax.set_xlabel('Data 1')
+ax.set_ylabel('Data 2')
+ax.set_title('Data Analysis')
+
+# Display the Matplotlib figure in Streamlit
+st.pyplot(fig)
 
 if uploaded_file:
     # Load data
