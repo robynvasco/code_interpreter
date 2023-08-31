@@ -67,6 +67,7 @@ if prompt := st.chat_input("What is up?"):
         conversation.extend([
             {"role": st.session_state.messages[-1]["role"], "content": st.session_state.messages[-1]["content"] + "Write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart."}
         ])
+        st.write(conversation)
 
 
         for response in openai.ChatCompletion.create(
