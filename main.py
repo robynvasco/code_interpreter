@@ -86,18 +86,17 @@ if prompt := st.chat_input("What is up?"):
 
         # After the loop, display the full_response and append it to messages
         message_placeholder.markdown(full_response)
-         # Execute Python code within full_response
-        st.text(full_response)
-        
-        if "'''" in full_response:
+        # Extract Python code blocks from full_response
+        python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
+
+        # Execute each Python code block
+        for code_block in python_code_blocks:
             try:
-                # Extract and execute Python code between triple quotes
-                code_blocks = full_response.split("'''")
-                for code_block in code_blocks:
-                    if code_block.strip():  # Check if the code block is not empty
-                        exec(code_block)
+                exec(code_block)
             except Exception as e:
-                st.error(f"Error executing Python code: {str(e)}")
+                st.error(f"Error executing code block: {str(e)}")
+
+
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
