@@ -56,11 +56,15 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
+        # Define the system message based on the presence of data
+        if "data" in locals():
+            system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart."}
+        else:
+            system_message = {"role": "system", "content": "You are a data analysis expert."}
         
         # Send user message and the last two conversations to OpenAI
-        conversation = [
-        {"role": "system", "content": "You are a data analysis expert. If the user asks you to, write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart for th following data:" + data.to_string(index=False)}
-        ]
+        conversation = [system_message]
+        
         for m in st.session_state.messages[-3:-1]:
             conversation.append({"role": m["role"], "content": m["content"]})
 
