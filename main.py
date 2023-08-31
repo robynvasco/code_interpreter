@@ -63,7 +63,7 @@ if prompt := st.chat_input("What is up?"):
             system_message = {"role": "system", "content": "You are a data analysis expert."}
         
         # Send user message and the last two conversations to OpenAI
-        conversation = [system_message]
+        conversation = []
 
         for m in st.session_state.messages[-3:-1]:
             conversation.append({"role": m["role"], "content": m["content"]})
@@ -72,6 +72,7 @@ if prompt := st.chat_input("What is up?"):
             "role": st.session_state.messages[-1]["role"],
             "content": st.session_state.messages[-1]["content"]
         })
+        conversation.append(system_message)
 
         st.write(conversation)
 
