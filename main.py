@@ -28,4 +28,22 @@ if uploaded_file:
 # Title and description
 st.title("Data Analysis App")
 
+with st.echo():
+    # Your Python code goes here
+    a = 5
+    b = 10
+    result = a + b
+    # Create some data for plotting
+    x = [1, 2, 3, 4, 5]
+    y = [10, 8, 15, 7, 12]
+
+    # Create a Matplotlib plot
+    plt.plot(x, y)
+    plt.xlabel('X-axis')
+    plt.ylabel('Y-axis')
+    plt.title('Simple Matplotlib Plot')
+
+    # Display the plot in the Streamlit app
+    st.pyplot(plt)
+
 
