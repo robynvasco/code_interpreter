@@ -43,7 +43,6 @@ with st.echo():
     plt.ylabel('Y-axis')
     plt.title('Simple Matplotlib Plot')
 
-    # Display the plot in the Streamlit app
-    st.pyplot(plt)
+   
 
 
