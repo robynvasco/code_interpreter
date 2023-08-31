@@ -60,14 +60,18 @@ if prompt := st.chat_input("What is up?"):
         # Send user message and the last two conversations to OpenAI
         conversation = [
         {"role": "system", "content": "You are a data analysis expert."},
-        {"role": st.session_state.messages[-3]["role"], "content": st.session_state.messages[-3]["content"] },
-        {"role": st.session_state.messages[-2]["role"], "content": st.session_state.messages[-2]["content"] },
-        {"role": st.session_state.messages[-1]["role"], "content": st.session_state.messages[-1]["content"] + "Write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart."}
+        {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:-1]
         ]
+
+        # Extend the conversation with the last message and the additional instruction
+        conversation.extend([
+            {"role": st.session_state.messages[-1]["role"], "content": st.session_state.messages[-1]["content"] + "Write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart."}
+        ])
+
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
-            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]],
+            messages=conversation,
             stream=True,
         ):
             full_response += response.choices[0].delta.get("content", "")
