@@ -74,7 +74,7 @@ if prompt := st.chat_input("What is up?"):
         })
         conversation.append(system_message)
 
-        st.write(conversation)
+        
 
 
         for response in openai.ChatCompletion.create(
@@ -87,8 +87,10 @@ if prompt := st.chat_input("What is up?"):
 
         # After the loop, display the full_response and append it to messages
         with st.echo():
-            message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.write(full_response)
+            
+        message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
 
