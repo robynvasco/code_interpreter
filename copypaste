@@ -1,0 +1,45 @@
+
+# Set a default model
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+  # User input for analysis request
+    analysis_request = "Write a working python code that creates a matplot figure object and plot it with st.pyplot(fig). Only write the python code and nothing else for the following data: " + data.to_string(index=False) + "Only write the python code and nothing else."
+
+    if st.button("Generate Analysis Code"):
+        # Create a conversation with a system message and user message
+        conversation = [
+            {"role": "system", "content": "You are a data analysis expert."},
+            {"role": "user", "content": analysis_request}
+        ]
+
+
+# Accept user input
+if prompt := st.chat_input("Visualize my uploaded data"):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # Send user message and the last two conversations to OpenAI
+    conversation = [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]]
+    response = openai.ChatCompletion.create(
+        model=st.session_state["openai_model"],
+        messages=conversation,
+    )
+
+    # Extract and display the assistant's response
+    assistant_response = response.choices[0].message["content"]
+    st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+    with st.chat_message("assistant"):
+        st.markdown(assistant_response)
