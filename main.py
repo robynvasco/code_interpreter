@@ -3,6 +3,7 @@ import pandas as pd
 import openai
 import os
 import matplotlib.pyplot as plt
+import re
 
 # Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_KEY"]
