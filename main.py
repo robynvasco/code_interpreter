@@ -28,20 +28,57 @@ if uploaded_file:
 # Title and description
 st.title("Data Analysis App")
 
-with st.echo():
-    # Your Python code goes here
-    a = 5
-    b = 10
-    result = a + b
-    # Create some data for plotting
-    x = [1, 2, 3, 4, 5]
-    y = [10, 8, 15, 7, 12]
 
-    # Create a Matplotlib plot
-    plt.plot(x, y)
-    plt.xlabel('X-axis')
-    plt.ylabel('Y-axis')
-    plt.title('Simple Matplotlib Plot')
+# Set OpenAI API key from Streamlit secrets
+openai.api_key = st.secrets["OPENAI_KEY"]
+
+# Set a default model
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Accept user input
+if prompt := st.chat_input("What is up?"):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_response = ""
+        
+        # Send user message and the last two conversations to OpenAI
+        conversation = [
+        {"role": "system", "content": "You are a data analysis expert."},
+        {"role": st.session_state.messages[-3]["role"], "content": st.session_state.messages[-3]["content"] },
+        {"role": st.session_state.messages[-2]["role"], "content": st.session_state.messages[-2]["content"] },
+        {"role": st.session_state.messages[-1]["role"], "content": st.session_state.messages[-1]["content"] + "Write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart."}
+        ]
+
+        for response in openai.ChatCompletion.create(
+            model=st.session_state["openai_model"],
+            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]],
+            stream=True,
+        ):
+            full_response += response.choices[0].delta.get("content", "")
+            message_placeholder.markdown(full_response + "▌")
+
+        # After the loop, display the full_response and append it to messages
+        message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+
+
 
    
 

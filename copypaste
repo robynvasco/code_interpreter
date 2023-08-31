@@ -32,7 +32,12 @@ if prompt := st.chat_input("Visualize my uploaded data"):
         st.markdown(prompt)
 
     # Send user message and the last two conversations to OpenAI
-    conversation = [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]]
+    conversation = [
+    {"role": "system", "content": "You are a data analysis expert."},
+    {"role": st.session_state.messages[-2]["role"], "content": st.session_state.messages[-2]["content"] + },
+    {"role": st.session_state.messages[-1]["role"], "content": st.session_state.messages[-1]["content"] + "Only write code."}]
+
+      
     response = openai.ChatCompletion.create(
         model=st.session_state["openai_model"],
         messages=conversation,
