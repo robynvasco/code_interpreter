@@ -76,7 +76,6 @@ if prompt := st.chat_input("What is up?"):
 
         
 
-
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
             messages=conversation,
@@ -86,10 +85,17 @@ if prompt := st.chat_input("What is up?"):
             message_placeholder.markdown(full_response + "▌")
 
         # After the loop, display the full_response and append it to messages
-    
-        st.write(full_response)
-            
         message_placeholder.markdown(full_response)
+         # Execute Python code within full_response
+        if "'''" in full_response:
+            try:
+                # Extract and execute Python code between triple quotes
+                code_blocks = full_response.split("'''")
+                for code_block in code_blocks:
+                    if code_block.strip():  # Check if the code block is not empty
+                        exec(code_block)
+            except Exception as e:
+                st.error(f"Error executing Python code: {str(e)}")
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
