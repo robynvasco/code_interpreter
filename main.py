@@ -63,17 +63,12 @@ if prompt := st.chat_input("What is up?"):
         ]
         for m in st.session_state.messages[-3:-1]:
             conversation.append({"role": m["role"], "content": m["content"]})
-            
+
         conversation.append({
             "role": st.session_state.messages[-1]["role"],
-            "content": st.session_state.messages[-1]["content"] + "Write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart."
+            "content": st.session_state.messages[-1]["content"] + "If the user asks you to, write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart for th following data:" + data.to_string(index=False)
         })
 
-
-        # Extend the conversation with the last message and the additional instruction
-        conversation.extend([
-            {"role": st.session_state.messages[-1]["role"], "content": st.session_state.messages[-1]["content"] + "Write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart."}
-        ])
         st.write(conversation)
 
 
