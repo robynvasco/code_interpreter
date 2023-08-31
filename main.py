@@ -87,6 +87,8 @@ if prompt := st.chat_input("What is up?"):
         # After the loop, display the full_response and append it to messages
         message_placeholder.markdown(full_response)
          # Execute Python code within full_response
+        st.text(full_response)
+        
         if "'''" in full_response:
             try:
                 # Extract and execute Python code between triple quotes
