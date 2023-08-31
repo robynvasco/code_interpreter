@@ -58,7 +58,7 @@ if prompt := st.chat_input("What is up?"):
         full_response = ""
         # Define the system message based on the presence of data
         if "data" in locals():
-            system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. I gave you the ability to execute code. The dataFrame that contains the data is called data, which contains following data:" + data.to_string(index=False) }
+            system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. I gave you the ability to execute code. The dataFrame that contains the data already exists and is called data, so don't create a new on. Here you can se what the data looks like" + data.to_string(index=False) }
         else:
             system_message = {"role": "system", "content": "You are a data analysis expert."}
         
