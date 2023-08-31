@@ -59,14 +59,14 @@ if prompt := st.chat_input("What is up?"):
         
         # Send user message and the last two conversations to OpenAI
         conversation = [
-        {"role": "system", "content": "You are a data analysis expert."}
+        {"role": "system", "content": "You are a data analysis expert. If the user asks you to, write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart for th following data:" + data.to_string(index=False)}
         ]
         for m in st.session_state.messages[-3:-1]:
             conversation.append({"role": m["role"], "content": m["content"]})
 
         conversation.append({
             "role": st.session_state.messages[-1]["role"],
-            "content": st.session_state.messages[-1]["content"] + "If the user asks you to, write a working streamlit python code that visualizes the data and plot it with streamlit eg. st.plotly_chart for th following data:" + data.to_string(index=False)
+            "content": st.session_state.messages[-1]["content"]
         })
 
         st.write(conversation)
