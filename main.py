@@ -86,8 +86,8 @@ if prompt := st.chat_input("What is up?"):
             message_placeholder.markdown(full_response + "▌")
 
         # After the loop, display the full_response and append it to messages
-        with st.echo():
-            st.write(full_response)
+    
+        st.write(full_response)
             
         message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
