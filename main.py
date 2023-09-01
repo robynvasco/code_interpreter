@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import openai
 import re
-import plotly.express as px
-import plotly.io as pio
+import plotly
+import plotly
 from IPython.display import HTML
 import time
 
