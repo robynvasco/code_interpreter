@@ -21,7 +21,7 @@ st.title("Data Analysis App")
 
 if "system" not in st.session_state:
     system_message = {"role": "system", "content": "You are a data analysis expert."}
-else
+else:
     system_message = st.session_state.system
 
 # Set OpenAI API key from Streamlit secrets
