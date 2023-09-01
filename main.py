@@ -19,7 +19,7 @@ openai.api_key = st.secrets["OPENAI_KEY"]
 # Title and description
 st.title("Data Analysis App")
 
-
+system_message = {"role": "system", "content": "You are a data analysis expert."}
 
 
 # Set OpenAI API key from Streamlit secrets
@@ -89,7 +89,7 @@ if prompt := st.chat_input("Send a message"):
             except Exception as e:
                 st.error()
                 
-system_message = {"role": "system", "content": "You are a data analysis expert."}
+
 # File upload in the sidebar
 st.sidebar.write("Upload a CSV or Excel file for analysis.")
 uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
