@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import openai
-import os
-import matplotlib.pyplot as plt
 import re
 import plotly.express as px
 import plotly.io as pio
