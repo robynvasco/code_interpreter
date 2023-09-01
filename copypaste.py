@@ -4,7 +4,7 @@ import openai
 st.title("ChatGPT-like clone")
 
 # Set OpenAI API key from Streamlit secrets
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai.api_key = st.secrets["OPENAI_KEY"]
 
 # Set a default model
 if "openai_model" not in st.session_state:
