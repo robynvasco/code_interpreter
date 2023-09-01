@@ -19,9 +19,10 @@ openai.api_key = st.secrets["OPENAI_KEY"]
 # Title and description
 st.title("Data Analysis App")
 
-system_message = {"role": "system", "content": "You are a data analysis expert."}
-if st.session_state.system
-    system_message =  st.session_state.system
+if "system" not in st.session_state:
+    system_message = {"role": "system", "content": "You are a data analysis expert."}
+else
+    system_message = st.session_state.system
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
