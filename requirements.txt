@@ -5,3 +5,4 @@ openpyxl==3.0.9     # For handling Excel files
 matplotlib==3.4.3   # For data visualization
 openai
 plotly
+ipython
