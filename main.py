@@ -67,7 +67,7 @@ if prompt := st.chat_input("Send a message"):
 
         for response in openai.ChatCompletion.create(
                 model=st.session_state["openai_model"],
-                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                messages=conversation,
                 stream=True,
             ):
                 full_response += response.choices[0].delta.get("content", "")
