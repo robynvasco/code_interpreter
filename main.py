@@ -55,7 +55,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Accept user input
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Send a message"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
     # Display user message in chat message container
@@ -74,20 +74,13 @@ if prompt := st.chat_input("What is up?"):
         # Send user message and the last two conversations to OpenAI
         conversation = []
 
-        for m in st.session_state.messages[-3:-1]:
+        for m in st.session_state.messages[-3:]:
             conversation.append({"role": m["role"], "content": m["content"]})
-
-        conversation.append({
-            "role": st.session_state.messages[-1]["role"],
-            "content": st.session_state.messages[-1]["content"]
-        })
-        st.write(conversation)
-            # Introduce a delay before displaying the full_response
-        time.sleep(5)  # You can adjust the delay duration as needed
+        time.sleep(3)  # You can adjust the delay duration as needed
         conversation.append(system_message)
         st.write(conversation)
             # Introduce a delay before displaying the full_response
-        time.sleep(5)  # You can adjust the delay duration as needed
+        time.sleep(3)  # You can adjust the delay duration as needed
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
