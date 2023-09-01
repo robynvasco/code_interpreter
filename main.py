@@ -61,25 +61,26 @@ if prompt := st.chat_input("Send a message"):
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
+
+    # Define the system message based on the presence of data
+    if "data" in locals():
+        system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False) }
+    else:
+        system_message = {"role": "system", "content": "You are a data analysis expert."}
+    
+    # Send user message and the last two conversations to OpenAI
+    conversation = [
+        {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]
+    ]
+    
+    conversation.append(system_message)
+    st.write(conversation)
+    # Introduce a delay before displaying the full_response
+    time.sleep(3)  # You can adjust the delay duration as needed
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-        # Define the system message based on the presence of data
-        if "data" in locals():
-            system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False) }
-        else:
-            system_message = {"role": "system", "content": "You are a data analysis expert."}
-        
-        # Send user message and the last two conversations to OpenAI
-        conversation = [
-            {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]
-        ]
-       
-        conversation.append(system_message)
-        st.write(conversation)
-        # Introduce a delay before displaying the full_response
-        time.sleep(3)  # You can adjust the delay duration as needed
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
@@ -87,7 +88,6 @@ if prompt := st.chat_input("Send a message"):
             stream=True,
         ):
             full_response += response.choices[0].delta.get("content", "")
-            time.sleep(2)
             message_placeholder.markdown(full_response + "▌")
 
         # After the loop, display the full_response and append it to messages
