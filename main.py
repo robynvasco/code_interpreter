@@ -5,6 +5,8 @@ import os
 import matplotlib.pyplot as plt
 import re
 import plotly.express as px
+import plotly.io as pio
+from IPython.display import HTML
 
 # Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -42,6 +44,11 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Create a function to convert Plotly figures to HTML
+def plotly_fig_to_html(fig):
+    html_repr = pio.to_html(fig, full_html=False)
+    return HTML(html_repr).data
+
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -75,8 +82,7 @@ if prompt := st.chat_input("What is up?"):
             "content": st.session_state.messages[-1]["content"]
         })
         conversation.append(system_message)
-        conversation_length = len(system_message)
-        st.write(f"Conversation Length: {conversation_length}")
+        
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
@@ -88,6 +94,10 @@ if prompt := st.chat_input("What is up?"):
 
         # After the loop, display the full_response and append it to messages
         message_placeholder.markdown(full_response)
+
+        #Append response and chart to session_state
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
         # Extract Python code blocks from full_response
         python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
 
@@ -95,11 +105,16 @@ if prompt := st.chat_input("What is up?"):
         for code_block in python_code_blocks:
             try:
                 exec(code_block)
+                # Check if the last executed code generated a Plotly figure
+                if 'fig' in locals() and isinstance(fig, px.graph_objs._figure.Figure):
+                    chart_html = plotly_fig_to_html(fig)
+                    # Append the chart as an HTML representation to messages
+                    st.session_state.messages.append({"role": "assistant", "content": chart_html})               
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
+        
 
-
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+            
 
 
 
