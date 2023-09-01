@@ -23,6 +23,13 @@ st.title("Data Analysis App")
 st.sidebar.write("Upload a CSV or Excel file for analysis.")
 uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
 
+
+# Define the system message based on the presence of data
+if "data" in locals():
+    system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False) }
+else:
+    system_message = {"role": "system", "content": "You are a data analysis expert."}
+
 if uploaded_file:
     # Load data
     if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
@@ -32,7 +39,10 @@ if uploaded_file:
 
     # Display the first 10 entries of the data in the sidebar
     st.sidebar.subheader("First 10 Entries of Data")
-    st.sidebar.write(data.head(10))   
+    st.sidebar.write(data.head(10))  
+    # Update the system message when a file is uploaded
+    
+ 
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -59,11 +69,6 @@ if prompt := st.chat_input("Send a message"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Define the system message based on the presence of data
-    if "data" in locals():
-        system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False) }
-    else:
-        system_message = {"role": "system", "content": "You are a data analysis expert."}
     
     # Send user message and the last two conversations to OpenAI
     conversation = [
