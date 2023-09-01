@@ -25,6 +25,9 @@ if "system" not in st.session_state:
 else:
     system_message = st.session_state.system
 
+if "data" in st.session_state:
+    data = st.session_state.data
+
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
 
@@ -109,6 +112,8 @@ if uploaded_file:
         data = pd.read_excel(uploaded_file)
     else:
         data = pd.read_csv(uploaded_file)
+    st.session_state.data = data
+
 
     # Display the first 10 entries of the data in the sidebar
     st.sidebar.subheader("First 10 Entries of Data")
