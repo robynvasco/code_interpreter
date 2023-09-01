@@ -12,7 +12,6 @@ from IPython.display import HTML
 openai.api_key = st.secrets["OPENAI_KEY"]
 
 
-
 # File upload in the sidebar
 st.sidebar.write("Upload a CSV or Excel file for analysis.")
 uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
@@ -104,7 +103,9 @@ if prompt := st.chat_input("What is up?"):
         # Execute each Python code block
         for code_block in python_code_blocks:
             try:
+                code_block_filtered = re.sub(r'(api_key\s*=\s*["\'].*?["\'])|(OPENAI_KEY\s*=\s*["\'].*?["\'])', 'REDACTED', code_block)
                 exec(code_block)
+
                 # Check if the last executed code generated a Plotly figure
                 if 'fig' in locals() and isinstance(fig, px.graph_objs._figure.Figure):
                     chart_html = plotly_fig_to_html(fig)
