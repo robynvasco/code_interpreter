@@ -57,9 +57,7 @@ if prompt := st.chat_input("Send a message"):
     ]
     conversation.append(system_message)
 
-    st.write(conversation)
-    # Introduce a delay before displaying the full_response
-    time.sleep(3)  # You can adjust the delay duration as needed
+
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
