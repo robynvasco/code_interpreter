@@ -56,6 +56,7 @@ if prompt := st.chat_input("Send a message"):
         {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]
     ]
     conversation.append(system_message)
+    st.write(conversation)
 
 
     # Display assistant response in chat message container
