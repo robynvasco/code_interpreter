@@ -19,6 +19,20 @@ openai.api_key = st.secrets["OPENAI_KEY"]
 # Title and description
 st.title("Data Analysis App")
 
+# File upload in the sidebar
+st.sidebar.write("Upload a CSV or Excel file for analysis.")
+uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
+
+if uploaded_file:
+    # Load data
+    if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        data = pd.read_excel(uploaded_file)
+    else:
+        data = pd.read_csv(uploaded_file)
+
+    # Display the first 10 entries of the data in the sidebar
+    st.sidebar.subheader("First 10 Entries of Data")
+    st.sidebar.write(data.head(10))   
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -92,21 +106,9 @@ if prompt := st.chat_input("Send a message"):
                     st.session_state.messages.append({"role": "assistant", "content": chart_html})               
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
+        st.write(code_block_filtered)
         
-# File upload in the sidebar
-st.sidebar.write("Upload a CSV or Excel file for analysis.")
-uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
-
-if uploaded_file:
-    # Load data
-    if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        data = pd.read_excel(uploaded_file)
-    else:
-        data = pd.read_csv(uploaded_file)
-
-    # Display the first 10 entries of the data in the sidebar
-    st.sidebar.subheader("First 10 Entries of Data")
-    st.sidebar.write(data.head(10))        
+     
 
 
 
