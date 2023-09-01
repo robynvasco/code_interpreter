@@ -20,7 +20,8 @@ openai.api_key = st.secrets["OPENAI_KEY"]
 st.title("Data Analysis App")
 
 system_message = {"role": "system", "content": "You are a data analysis expert."}
-
+if st.session_state.system
+    system_message =  st.session_state.system
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -110,4 +111,4 @@ if uploaded_file:
         "role": "system",
         "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False)
     }
-    st.session_state.data = [data]
+    st.session_state.system = system_message
