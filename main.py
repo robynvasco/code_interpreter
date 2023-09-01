@@ -101,10 +101,9 @@ if prompt := st.chat_input("Send a message"):
             try:
                 code_block_filtered = re.sub(r'(api_key\s*=\s*["\'].*?["\'])|(openai\.api_key\s*=\s*["\'].*?["\'])|(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
                 exec(code_block_filtered)
-                st.write(code_block_filtered)
 
                 # Check if the last executed code generated a Plotly figure
-                if 'fig' in locals() and isinstance(fig, px.graph_objs._figure.Figure):
+                if 'fig' in locals() and isinstance(fig, plotly.graph_objs._figure.Figure):
                     chart_html = plotly_fig_to_html(fig)
                     # Append the chart as an HTML representation to messages
                     st.session_state.messages.append({"role": "assistant", "content": chart_html})               
