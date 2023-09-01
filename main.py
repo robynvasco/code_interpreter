@@ -91,7 +91,6 @@ if prompt := st.chat_input("Send a message"):
         
         message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-##
 
         # Extract Python code blocks from full_response
         python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
