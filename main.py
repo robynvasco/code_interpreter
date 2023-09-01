@@ -75,8 +75,8 @@ if prompt := st.chat_input("What is up?"):
             "content": st.session_state.messages[-1]["content"]
         })
         conversation.append(system_message)
-
-        
+        conversation_length = len(conversation)
+        st.write(f"Conversation Length: {conversation_length}")
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
