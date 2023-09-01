@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import openai
 import re
-import plotly
-import plotly
+import plotly.express as px
+import plotly.io as pio
 from IPython.display import HTML
 import time
 
@@ -103,7 +103,7 @@ if prompt := st.chat_input("Send a message"):
                 exec(code_block_filtered)
 
                 # Check if the last executed code generated a Plotly figure
-                if 'fig' in locals() and isinstance(fig, plotly.graph_objs._figure.Figure):
+                if 'fig' in locals() and isinstance(fig, px.graph_objs._figure.Figure):
                     chart_html = plotly_fig_to_html(fig)
                     # Append the chart as an HTML representation to messages
                     st.session_state.messages.append({"role": "assistant", "content": chart_html})               
