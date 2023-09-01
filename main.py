@@ -9,24 +9,13 @@ import plotly.io as pio
 from IPython.display import HTML
 import time
 
+# Create a function to convert Plotly figures to HTML
+def plotly_fig_to_html(fig):
+    html_repr = pio.to_html(fig, full_html=False)
+    return HTML(html_repr).data
+
 # Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_KEY"]
-
-
-# File upload in the sidebar
-st.sidebar.write("Upload a CSV or Excel file for analysis.")
-uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
-
-if uploaded_file:
-    # Load data
-    if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        data = pd.read_excel(uploaded_file)
-    else:
-        data = pd.read_csv(uploaded_file)
-
-    # Display the first 10 entries of the data in the sidebar
-    st.sidebar.subheader("First 10 Entries of Data")
-    st.sidebar.write(data.head(10))
 
 
 # Title and description
@@ -44,10 +33,6 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Create a function to convert Plotly figures to HTML
-def plotly_fig_to_html(fig):
-    html_repr = pio.to_html(fig, full_html=False)
-    return HTML(html_repr).data
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
@@ -72,8 +57,8 @@ if prompt := st.chat_input("Send a message"):
     conversation = [
         {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]
     ]
-    
     conversation.append(system_message)
+
     st.write(conversation)
     # Introduce a delay before displaying the full_response
     time.sleep(3)  # You can adjust the delay duration as needed
@@ -81,9 +66,10 @@ if prompt := st.chat_input("Send a message"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
+
         for response in openai.ChatCompletion.create(
                 model=st.session_state["openai_model"],
-                messages=converstation,
+                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
                 stream=True,
             ):
                 full_response += response.choices[0].delta.get("content", "")
@@ -110,8 +96,20 @@ if prompt := st.chat_input("Send a message"):
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
         
+# File upload in the sidebar
+st.sidebar.write("Upload a CSV or Excel file for analysis.")
+uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
 
-            
+if uploaded_file:
+    # Load data
+    if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        data = pd.read_excel(uploaded_file)
+    else:
+        data = pd.read_csv(uploaded_file)
+
+    # Display the first 10 entries of the data in the sidebar
+    st.sidebar.subheader("First 10 Entries of Data")
+    st.sidebar.write(data.head(10))        
 
 
 
