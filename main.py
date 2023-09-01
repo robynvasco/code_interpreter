@@ -81,7 +81,7 @@ if prompt := st.chat_input("What is up?"):
             "content": st.session_state.messages[-1]["content"]
         })
         conversation.append(system_message)
-        
+        st.write(conversation)
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
@@ -93,6 +93,7 @@ if prompt := st.chat_input("What is up?"):
 
         # After the loop, display the full_response and append it to messages
         message_placeholder.markdown(full_response)
+        st.write(full_response)
 
         #Append response and chart to session_state
         st.session_state.messages.append({"role": "assistant", "content": full_response})
