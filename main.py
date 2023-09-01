@@ -24,11 +24,7 @@ st.sidebar.write("Upload a CSV or Excel file for analysis.")
 uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
 
 
-# Define the system message based on the presence of data
-if "data" in locals():
-    system_message = {"role": "system", "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False) }
-else:
-    system_message = {"role": "system", "content": "You are a data analysis expert."}
+system_message = {"role": "system", "content": "You are a data analysis expert."}
 
 if uploaded_file:
     # Load data
@@ -41,7 +37,10 @@ if uploaded_file:
     st.sidebar.subheader("First 10 Entries of Data")
     st.sidebar.write(data.head(10))  
     # Update the system message when a file is uploaded
-    
+    system_message = {
+        "role": "system",
+        "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False)
+    }
  
 
 # Set OpenAI API key from Streamlit secrets
