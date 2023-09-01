@@ -7,6 +7,7 @@ import re
 import plotly.express as px
 import plotly.io as pio
 from IPython.display import HTML
+import time
 
 # Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_KEY"]
