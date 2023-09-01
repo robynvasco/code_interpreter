@@ -80,7 +80,12 @@ if prompt := st.chat_input("Send a message"):
         # Execute each Python code block
         for code_block in python_code_blocks:
             try:
-                code_block_filtered = re.sub(r'(api_key\s*=\s*["\'].*?["\'])|(openai\.api_key\s*=\s*["\'].*?["\'])|(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
+                # Updated regular expression
+                code_block_filtered = re.sub(
+                    r'(api_key\s*=\s*["\'].*?["\'])|'
+                    r'(openai\.api_key\s*=\s*["\'].*?["\'])|'
+                    r'(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
+
                 exec(code_block_filtered)
 
                 # Check if the last executed code generated a Plotly figure
@@ -89,7 +94,7 @@ if prompt := st.chat_input("Send a message"):
                     # Append the chart as an HTML representation to messages
                     st.session_state.messages.append({"role": "assistant", "content": chart_html})               
             except Exception as e:
-                st.error()
+                st.error(f"Error executing code block: {str(e)}")
                 
 
 # File upload in the sidebar
