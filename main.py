@@ -19,14 +19,10 @@ openai.api_key = st.secrets["OPENAI_KEY"]
 # Title and description
 st.title("Data Analysis App")
 
-# File upload in the sidebar
-st.sidebar.write("Upload a CSV or Excel file for analysis.")
-uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
-
-
 system_message = {"role": "system", "content": "You are a data analysis expert."}
 
 
+ 
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -96,6 +92,11 @@ if prompt := st.chat_input("Send a message"):
             except Exception as e:
                 st.write("Could not execute code.")
 
+# File upload in the sidebar
+st.sidebar.write("Upload a CSV or Excel file for analysis.")
+uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
+
+
 if uploaded_file:
     # Load data
     if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
@@ -111,4 +112,3 @@ if uploaded_file:
         "role": "system",
         "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False)
     }
- 
