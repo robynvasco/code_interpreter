@@ -72,14 +72,13 @@ if prompt := st.chat_input("Send a message"):
             system_message = {"role": "system", "content": "You are a data analysis expert."}
         
         # Send user message and the last two conversations to OpenAI
-        conversation = []
-
-        for m in st.session_state.messages[-3:]:
-            conversation.append({"role": m["role"], "content": m["content"]})
-        time.sleep(3)  # You can adjust the delay duration as needed
+        conversation = [
+            {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]
+        ]
+       
         conversation.append(system_message)
         st.write(conversation)
-            # Introduce a delay before displaying the full_response
+        # Introduce a delay before displaying the full_response
         time.sleep(3)  # You can adjust the delay duration as needed
 
         for response in openai.ChatCompletion.create(
