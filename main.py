@@ -109,7 +109,7 @@ if prompt := st.chat_input("Send a message"):
                     # Append the chart as an HTML representation to messages
                     st.session_state.messages.append({"role": "assistant", "content": chart_html})               
             except Exception as e:
-                st.error(f"Error executing code block: {str(e)}")
+                
         st.write(code_block_filtered)
         
      
