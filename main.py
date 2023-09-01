@@ -82,6 +82,8 @@ if prompt := st.chat_input("What is up?"):
         })
         conversation.append(system_message)
         st.write(conversation)
+            # Introduce a delay before displaying the full_response
+        time.sleep(5)  # You can adjust the delay duration as needed
 
         for response in openai.ChatCompletion.create(
             model=st.session_state["openai_model"],
@@ -89,11 +91,11 @@ if prompt := st.chat_input("What is up?"):
             stream=True,
         ):
             full_response += response.choices[0].delta.get("content", "")
+            time.sleep(2)
             message_placeholder.markdown(full_response + "▌")
 
         # After the loop, display the full_response and append it to messages
         message_placeholder.markdown(full_response)
-        st.write(full_response)
 
         #Append response and chart to session_state
         st.session_state.messages.append({"role": "assistant", "content": full_response})
