@@ -96,7 +96,7 @@ if prompt := st.chat_input("Send a message"):
                 if 'fig' in locals() and isinstance(fig, Figure):
                     chart_html = plotly_fig_to_html(fig)
                     # Append the chart as an HTML representation to messages
-                    st.session_state.messages.append({"role": "assistant", "content": chart_html})               
+                    st.session_state.messages.append({"role": "assistant", "content": "Chart" + chart_html})               
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
                 
