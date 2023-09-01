@@ -81,6 +81,9 @@ if prompt := st.chat_input("What is up?"):
             "role": st.session_state.messages[-1]["role"],
             "content": st.session_state.messages[-1]["content"]
         })
+        st.write(conversation)
+            # Introduce a delay before displaying the full_response
+        time.sleep(5)  # You can adjust the delay duration as needed
         conversation.append(system_message)
         st.write(conversation)
             # Introduce a delay before displaying the full_response
