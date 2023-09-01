@@ -2,8 +2,6 @@ streamlit  # You can specify the Streamlit version you need
 pandas      # Data manipulation library
 requests    # HTTP library for making API requests
 openpyxl==3.0.9     # For handling Excel files
-  # For data visualization
 openai
 plotly
 ipython
-time
