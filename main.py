@@ -104,7 +104,7 @@ if prompt := st.chat_input("What is up?"):
         # Execute each Python code block
         for code_block in python_code_blocks:
             try:
-                code_block_filtered = re.sub(r'(api_key\s*=\s*["\'].*?["\'])|(OPENAI_KEY\s*=\s*["\'].*?["\'])', 'REDACTED', code_block)
+                code_block_filtered = re.sub(r'(api_key\s*=\s*["\'].*?["\'])|(openai\.api_key\s*=\s*["\'].*?["\'])|(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
                 exec(code_block_filtered)
 
                 # Check if the last executed code generated a Plotly figure
