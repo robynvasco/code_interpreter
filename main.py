@@ -81,20 +81,16 @@ if prompt := st.chat_input("Send a message"):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
-
         for response in openai.ChatCompletion.create(
-            model=st.session_state["openai_model"],
-            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-3:]],
-            stream=True,
-        ):
-            full_response += response.choices[0].delta.get("content", "")
-            message_placeholder.markdown(full_response + "▌")
-
-        # After the loop, display the full_response and append it to messages
-        message_placeholder.markdown(full_response)
-
-        #Append response and chart to session_state
+                model=st.session_state["openai_model"],
+                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                stream=True,
+            ):
+                full_response += response.choices[0].delta.get("content", "")
+                message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
+##
 
         # Extract Python code blocks from full_response
         python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
