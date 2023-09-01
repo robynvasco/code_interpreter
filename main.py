@@ -95,6 +95,7 @@ if prompt := st.chat_input("Send a message"):
 
         # Extract Python code blocks from full_response
         python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
+        code_block_filtered = ""
 
         # Execute each Python code block
         for code_block in python_code_blocks:
