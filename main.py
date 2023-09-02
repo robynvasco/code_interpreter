@@ -39,6 +39,10 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Initialize session state
+if 'figs' not in st.session_state:
+    st.session_state.figs = []
+
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
