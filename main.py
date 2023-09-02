@@ -96,11 +96,14 @@ if prompt := st.chat_input("Send a message"):
 
                 exec(code_block_filtered)
 
-                # Check if the last executed code generated a Plotly figure
-                if 'fig' in locals() and isinstance(fig, Figure):
-                    chart_html = plotly_fig_to_html(fig)
-                    # Append the chart as an HTML representation to messages
-                    st.session_state.messages.append({"role": "assistant", "content": "Chart" + chart_html})               
+                # Search for st.plotly_chart calls in code_block_filtered
+                chart_matches = re.findall(r'st\.plotly_chart\((.*?)\)', code_block_filtered)
+                # Extract and store figures in session state
+                for chart_match in chart_matches:
+                    try:
+                        fig = eval(chart_match)  # Evaluate the figure creation code
+                        st.session_state.figs.append(fig)
+                              
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
                 
@@ -128,3 +131,8 @@ if uploaded_file:
         "content": "You are a data analysis expert. Only if the user asks you to, write a working Streamlit Python code that visualizes the data and plots it with Streamlit, e.g. st.plotly_chart. Pretend as if you could execute code. Do not Load the data into a DataFrame. it is already loaded and is called data. Here you can se what the data looks like" + data.to_string(index=False)
     }
     st.session_state.system = system_message
+
+# Display the stored figures in the sidebar
+for fig_idx, fig in enumerate(st.session_state.figs, 1):
+    st.sidebar.subheader(f"Figure {fig_idx}")
+    st.sidebar.plotly_chart(fig)
