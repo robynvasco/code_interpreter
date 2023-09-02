@@ -5,6 +5,7 @@ import re
 import plotly.express as px
 import time
 import numpy
+import plotly.io as pio
 
 
 # Set your OpenAI API key
@@ -44,6 +45,7 @@ for message in st.session_state.messages:
             st.text(message["content"])
     elif message["role"] == "chart":
         with st.chat_message("assistant"):  # Display the chart as if the assistant is sending it
+            fig = pio.from_json(message["content"])
             st.plotly_chart(message["content"])
 
 # Accept user input
@@ -99,7 +101,8 @@ if prompt := st.chat_input("Send a message"):
                 for chart_match in chart_matches:
                     try:
                         fig = eval(chart_match)  # Evaluate the figure creation code
-                        st.session_state.messages.append({"role": "chart", "content": fig})
+                        fig_json = fig.to_json()
+                        st.session_state.messages.append({"role": "chart", "content": fig_json})
                     except Exception as e:
                         st.error(f"Error extracting and storing figure: {str(e)}")          
             except Exception as e:
