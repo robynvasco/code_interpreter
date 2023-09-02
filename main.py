@@ -3,10 +3,7 @@ import pandas as pd
 import openai
 import re
 import plotly.express as px
-import plotly.io as pio
-from IPython.display import HTML
 import time
-from plotly.graph_objs import Figure
 
 
 # Set your OpenAI API key
@@ -43,7 +40,7 @@ for message in st.session_state.messages:
             st.markdown(message["content"])
     elif message["role"] == "user":
         with st.chat_message(message["role"]):
-            st.write(message["content"])
+            st.text(message["content"])
     elif message["role"] == "chart":
         with st.chat_message("assistant"):  # Display the chart as if the assistant is sending it
             st.plotly_chart(message["content"])
@@ -54,14 +51,14 @@ if prompt := st.chat_input("Send a message"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     # Display user message in chat message container
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.write(prompt)
     
     # Send user message and the last two conversations to OpenAI
     conversation = [
         {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-2:]
     ]
     conversation.append(system_message)
-    st.write(conversation)
+    
 
 
     # Display assistant response in chat message container
