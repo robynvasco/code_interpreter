@@ -103,7 +103,8 @@ if prompt := st.chat_input("Send a message"):
                     try:
                         fig = eval(chart_match)  # Evaluate the figure creation code
                         st.session_state.figs.append(fig)
-                              
+                    except Exception as e:
+                        st.error(f"Error extracting and storing figure: {str(e)}")          
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
                 
