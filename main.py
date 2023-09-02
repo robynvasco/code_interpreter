@@ -4,6 +4,7 @@ import openai
 import re
 import plotly.express as px
 import time
+import numpy
 
 
 # Set your OpenAI API key
