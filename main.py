@@ -8,10 +8,6 @@ from IPython.display import HTML
 import time
 from plotly.graph_objs import Figure
 
-# Create a function to convert Plotly figures to HTML
-def plotly_fig_to_html(fig):
-    html_repr = pio.to_html(fig, full_html=False)
-    return HTML(html_repr).data
 
 # Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -39,15 +35,18 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Initialize session state
-if 'figs' not in st.session_state:
-    st.session_state.figs = []
-
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message["role"] == "assistant":
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+    elif message["role"] == "user":
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+    elif message["role"] == "chart":
+        with st.chat_message("assistant"):  # Display the chart as if the assistant is sending it
+            st.plotly_chart(message["content"])
 
 # Accept user input
 if prompt := st.chat_input("Send a message"):
@@ -102,7 +101,7 @@ if prompt := st.chat_input("Send a message"):
                 for chart_match in chart_matches:
                     try:
                         fig = eval(chart_match)  # Evaluate the figure creation code
-                        st.session_state.figs.append(fig)
+                        st.session_state.messages.append({"role": "chart", "content": fig})
                     except Exception as e:
                         st.error(f"Error extracting and storing figure: {str(e)}")          
             except Exception as e:
@@ -133,7 +132,3 @@ if uploaded_file:
     }
     st.session_state.system = system_message
 
-# Display the stored figures in the sidebar
-for fig_idx, fig in enumerate(st.session_state.figs, 1):
-    st.sidebar.subheader(f"Figure {fig_idx}")
-    st.sidebar.plotly_chart(fig)
