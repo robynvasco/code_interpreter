@@ -43,10 +43,9 @@ for message in st.session_state.messages:
     elif message["role"] == "user":
         with st.chat_message(message["role"]):
             st.text(message["content"])
-    elif message["role"] == "chart":
-        with st.chat_message("assistant"):  # Display the chart as if the assistant is sending it
-            fig = pio.from_json(message["content"])
-            st.plotly_chart(message["content"])
+    elif isinstance(message, Figure):
+        # If the message is a Plotly figure, render it as a chart
+        st.plotly_chart(message))
 
 # Accept user input
 if prompt := st.chat_input("Send a message"):
@@ -101,8 +100,8 @@ if prompt := st.chat_input("Send a message"):
                 for chart_match in chart_matches:
                     try:
                         fig = eval(chart_match)  # Evaluate the figure creation code
-                        fig_json = fig.to_json()
-                        st.session_state.messages.append({"role": "chart", "content": fig_json})
+                        
+                        st.session_state.messages.append(fig)
                     except Exception as e:
                         st.error(f"Error extracting and storing figure: {str(e)}")          
             except Exception as e:
