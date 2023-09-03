@@ -6,6 +6,7 @@ import plotly.express as px
 import time
 import numpy
 import plotly.io as pio
+from plotly.graph_objs import Figure
 
 
 # Set your OpenAI API key
