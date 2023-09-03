@@ -45,7 +45,7 @@ for message in st.session_state.messages:
             st.text(message["content"])
     elif isinstance(message, Figure):
         # If the message is a Plotly figure, render it as a chart
-        st.plotly_chart(message))
+        st.plotly_chart(message)
 
 # Accept user input
 if prompt := st.chat_input("Send a message"):
