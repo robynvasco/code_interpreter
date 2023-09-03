@@ -46,10 +46,16 @@ for message in st.session_state.messages:
         elif message["role"] == "user":
             with st.chat_message(message["role"]):
                 st.write(message["content"])
-    elif isinstance(message, Figure):
-        # This is a Plotly figure, display it with the "assistant" role
-        with st.chat_message("assistant"):
-            st.plotly_chart(message)
+    elif isinstance(message, tuple):
+        chart_type, chart_content = message
+        if chart_type == "plotly":
+            # This is a Plotly chart, display it with the "assistant" role
+            with st.chat_message("assistant"):
+                st.plotly_chart(chart_content)
+        elif chart_type == "bar":
+            # This is a Plotly chart, display it with the "assistant" role
+            with st.chat_message("assistant"):
+                st.bar_chart(chart_content)
 
 # Accept user input
 if prompt := st.chat_input("Send a message"):
@@ -96,16 +102,22 @@ if prompt := st.chat_input("Send a message"):
 
                 exec(code_block_filtered)
 
-                # Search for st.plotly_chart calls in code_block_filtered
-                chart_matches = re.findall(r'st\.plotly_chart\((.*?)\)', code_block_filtered)
+                # Search for st.plotly_chart and other chart function calls in code_block_filtered
+                chart_matches = re.findall(r'st\.(plotly_chart|bar_chart)\((.*?)\)', code_block_filtered)
+
                 # Extract and store figures in session state
-                for chart_match in chart_matches:
+                for chart_function, chart_match in chart_matches:
                     try:
-                        fig = eval(chart_match)  # Evaluate the figure creation code
-                        
-                        st.session_state.messages.append(fig)
+                        if chart_function == "plotly_chart":
+                            # Ensure that chart_match is a valid Python expression
+                            fig = eval(chart_match)  # Evaluate the figure creation code
+                            # Append the tuple with chart type and content
+                            st.session_state.messages.append(("plotly", fig))
+                        elif chart_function == "bar_chart":
+                            # Append the tuple with chart type and content
+                            st.session_state.messages.append(("bar", chart_match))
                     except Exception as e:
-                        st.error(f"Error extracting and storing figure: {str(e)}")          
+                        st.error(f"Error extracting and storing chart: {str(e)}")
             except Exception as e:
                 st.error(f"Error executing code block: {str(e)}")
                 
