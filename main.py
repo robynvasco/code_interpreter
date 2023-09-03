@@ -79,7 +79,7 @@ if prompt := st.chat_input("Send a message"):
         
         message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-
+    with st.chat_message("assistant"):
         # Extract Python code blocks from full_response
         python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
         code_block_filtered = ""
@@ -95,13 +95,14 @@ if prompt := st.chat_input("Send a message"):
 
                 exec(code_block_filtered)
 
-                # Search for st.plotly_chart calls in code_block_filtered
-                chart_matches = re.findall(r'st\.plotly_chart\((.*?)\)', code_block_filtered)
+                # Search for st.plotly_chart and st.bar_chart calls in code_block_filtered
+                chart_matches = re.findall(r'st\.(plotly_chart|bar_chart)\((.*?)\)', code_block_filtered)
+
                 # Extract and store figures in session state
                 for chart_match in chart_matches:
                     try:
                         fig = eval(chart_match)  # Evaluate the figure creation code
-                        
+    
                         st.session_state.messages.append(fig)
                     except Exception as e:
                         st.error(f"Error extracting and storing figure: {str(e)}")          
