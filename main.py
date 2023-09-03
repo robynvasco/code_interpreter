@@ -37,13 +37,16 @@ if "messages" not in st.session_state:
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
-    if message["role"] == "assistant":
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-    elif message["role"] == "user":
-        with st.chat_message(message["role"]):
-            st.text(message["content"])
+    if isinstance(message, dict):
+        # This is a text message with a "role" key
+        if message["role"] == "assistant":
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+        elif message["role"] == "user":
+            with st.chat_message(message["role"]):
+                st.write(message["content"])
     elif isinstance(message, Figure):
+        # This is a Plotly figure, display it with the "assistant" role
         with st.chat_message("assistant"):
             st.plotly_chart(message)
 
