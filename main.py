@@ -113,10 +113,10 @@ if prompt := st.chat_input("Send a message"):
                                 # Ensure that chart_match is a valid Python expression
                                 fig = eval(chart_match)  # Evaluate the figure creation code
                                 # Append the tuple with chart type and content
-                                st.session_state.messages.append(("plotly", chart_match))
+                                st.session_state.messages.append(("plotly", fig))
                             elif chart_function == "bar_chart":
-                                # Append the tuple with chart type and content
-                                st.session_state.messages.append(("bar", chart_match))
+                                fig = eval(chart_match)
+                                st.session_state.messages.append(("bar", fig))
                         except Exception as e:
                             st.error(f"Error extracting and storing chart: {str(e)}")
                 except Exception as e:
