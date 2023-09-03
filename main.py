@@ -86,41 +86,42 @@ if prompt := st.chat_input("Send a message"):
         message_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
     
-    with st.chat_message("assistant"):
+        python_code_blocks = []
         # Extract Python code blocks from full_response
         python_code_blocks = re.findall(r"```python(.*?)```", full_response, re.DOTALL)
         code_block_filtered = ""
+        if python_code_blocks:
+            with st.chat_message("assistant"):
+            # Execute each Python code block
+            for code_block in python_code_blocks:
+                try:
+                    # Updated regular expression
+                    code_block_filtered = re.sub(
+                        r'(api_key\s*=\s*["\'].*?["\'])|'
+                        r'(openai\.api_key\s*=\s*["\'].*?["\'])|'
+                        r'(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
 
-        # Execute each Python code block
-        for code_block in python_code_blocks:
-            try:
-                # Updated regular expression
-                code_block_filtered = re.sub(
-                    r'(api_key\s*=\s*["\'].*?["\'])|'
-                    r'(openai\.api_key\s*=\s*["\'].*?["\'])|'
-                    r'(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
+                    exec(code_block_filtered)
 
-                exec(code_block_filtered)
+                    # Search for st.plotly_chart and other chart function calls in code_block_filtered
+                    chart_matches = re.findall(r'st\.(plotly_chart|bar_chart)\((.*?)\)', code_block_filtered)
 
-                # Search for st.plotly_chart and other chart function calls in code_block_filtered
-                chart_matches = re.findall(r'st\.(plotly_chart|bar_chart)\((.*?)\)', code_block_filtered)
-
-                # Extract and store figures in session state
-                for chart_function, chart_match in chart_matches:
-                    try:
-                        if chart_function == "plotly_chart":
-                            # Ensure that chart_match is a valid Python expression
-                            fig = eval(chart_match)  # Evaluate the figure creation code
-                            # Append the tuple with chart type and content
-                            st.session_state.messages.append(("plotly", fig))
-                        elif chart_function == "bar_chart":
-                            # Append the tuple with chart type and content
-                            st.session_state.messages.append(("bar", chart_match))
-                    except Exception as e:
-                        st.error(f"Error extracting and storing chart: {str(e)}")
-            except Exception as e:
-                st.error(f"Error executing code block: {str(e)}")
-                
+                    # Extract and store figures in session state
+                    for chart_function, chart_match in chart_matches:
+                        try:
+                            if chart_function == "plotly_chart":
+                                # Ensure that chart_match is a valid Python expression
+                                fig = eval(chart_match)  # Evaluate the figure creation code
+                                # Append the tuple with chart type and content
+                                st.session_state.messages.append(("plotly", chart_match))
+                            elif chart_function == "bar_chart":
+                                # Append the tuple with chart type and content
+                                st.session_state.messages.append(("bar", chart_match))
+                        except Exception as e:
+                            st.error(f"Error extracting and storing chart: {str(e)}")
+                except Exception as e:
+                    st.error(f"Error executing code block: {str(e)}")
+                    
 
 # File upload in the sidebar
 st.sidebar.write("Upload a CSV or Excel file for analysis.")
