@@ -59,12 +59,9 @@ if prompt := st.chat_input("Send a message"):
     with st.chat_message("user"):
         st.write(prompt)
     
-    # Send user message and the last two conversations to OpenAI
-    conversation = [
-        {"role": m["role"], "content": m["content"]} for m in st.session_state.messages[-2:]
-    ]
-    conversation.append(system_message)
-    
+    # Send user message and the last prompt to OpenAI
+    conversation = [system_message]
+    conversation.append(st.session_state.messages[-1])
 
 
     # Display assistant response in chat message container
