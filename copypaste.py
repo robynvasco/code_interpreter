@@ -98,6 +98,7 @@ if prompt := st.chat_input("Send a message"):
             if text_from_url:
                 # Update the system message with the text from the URL
                 system_message["content"] += f"\nText from the URL:\n{text_from_url}"
+        system_message["content"] += f"\n When you write code always assume that the text from the website is already stored in the variable named text_from_url."     
         st.session_state.system = system_message
 
     # Send user message and the last prompt to OpenAI
