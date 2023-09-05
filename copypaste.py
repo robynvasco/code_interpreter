@@ -165,7 +165,7 @@ if prompt := st.chat_input("Send a message"):
 st.sidebar.write("Upload a CSV, Excel, Video or Picture for analysis and editing.")
 # File Upload
 accepted_formats = ["csv", "xlsx", "mp3", "wav", "ogg", "mp4", "avi", "mkv"]
-uploaded_file = st.file_uploader("Upload a file", type=accepted_formats)
+uploaded_file = st.sidebar.file_uploader("Upload a file", type=accepted_formats)
 
 
 if uploaded_file:
