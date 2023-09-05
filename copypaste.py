@@ -91,7 +91,7 @@ if prompt := st.chat_input("Send a message"):
     
     # Check if there are any URLs in the message
     if urls:
-        system_message = {"role": "system", "content": "You are a data analysis expert. When writing code always skip the Data loading step. Assume the the text is already loaded from the website and the variable is called text_from_url"}
+        system_message = {"role": "system", "content": "When you write code always assume that the text from the website is already stored in the variable named text_from_url."}
         for url in urls:
             text_from_url = fetch_text_from_url(url)
             
