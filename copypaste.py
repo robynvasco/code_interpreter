@@ -162,8 +162,10 @@ if prompt := st.chat_input("Send a message"):
                     
 
 # File upload in the sidebar
-st.sidebar.write("Upload a CSV or Excel file for analysis.")
-uploaded_file = st.sidebar.file_uploader("Upload a file", type=["csv", "xlsx"])
+st.sidebar.write("Upload a CSV, Excel, Video or Picture for analysis and editing.")
+# File Upload
+accepted_formats = ["csv", "xlsx", "mp3", "wav", "ogg", "mp4", "avi", "mkv"]
+uploaded_file = st.file_uploader("Upload a file", type=accepted_formats)
 
 
 if uploaded_file:
@@ -172,24 +174,32 @@ if uploaded_file:
         data = pd.read_excel(uploaded_file)
         workbook = openpyxl.load_workbook(uploaded_file)
         st.session_state.workbook = workbook
-    else:
+        st.session_state.data = data
+        # Update the system message when a file is uploaded
+        system_message = {
+        "role": "system",
+        "content": """
+        You are a data analysis expert. When writing code always skip the Data loading step. Assume the data from the excel file is stored with the variables
+        workbook = openpyxl.load_workbook(uploaded_file) and
+        data = pd.read_excel(uploaded_file)
+        Assume you are writing code for a streamlit app, so when the user ask you to plot something use st.plotly_chart
+        Here you can see what the data looks like:\n""" + data.to_string(index=False)
+        }
+        st.session_state.system = system_message
+    elif uploaded_file.type == "text/csv":
         data = pd.read_csv(uploaded_file)
-    st.session_state.data = data
-
-
-    # Display the first 10 entries of the data in the sidebar
-    st.sidebar.subheader("First 10 Entries of Data")
-    st.sidebar.write(data.head(10))  
-    # Update the system message when a file is uploaded
-    system_message = {
-    "role": "system",
-    "content": """
-    You are a data analysis expert. When writing code always skip the Data loading step. Assume the data is already loaded with 
-    workbook = openpyxl.load_workbook(uploaded_file) and
-    data = pd.read_excel(uploaded_file)
-    Assume you are wrting code with streamlit so when the user ask you to plot something use st.plotly_chart
-    Here you can see what the data looks like:\n""" + data.to_string(index=False)
-    }
-
-    st.session_state.system = system_message
+        st.session_state.data = data
+        # Update the system message when a file is uploaded
+        system_message = {
+        "role": "system",
+        "content": """
+        You are a data analysis expert. When writing code always skip the Data loading step. Assume the data from the csv file is stored with the variable called
+        data.
+        Assume you are writing code for a streamlit app, so when the user ask you to plot something use st.plotly_chart
+        Here you can see what the data looks like:\n""" + data.to_string(index=False)
+        }
+        st.session_state.system = system_message
+    else:
+        st.error("Unsupported file type")
+    
 
