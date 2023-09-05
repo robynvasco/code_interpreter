@@ -10,6 +10,7 @@ from plotly.graph_objs import Figure
 import requests
 from bs4 import BeautifulSoup
 import re
+import openpyxl
 
 
 # Set your OpenAI API key

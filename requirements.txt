@@ -8,3 +8,4 @@ ipython
 numpy
 requests
 beautifulsoup4
+openpyxl
