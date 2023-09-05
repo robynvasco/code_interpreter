@@ -6,3 +6,5 @@ openai
 plotly
 ipython
 numpy
+requests
+beautifulsoup4
