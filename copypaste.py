@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import openpyxl
+import os
 
 
 # Set your OpenAI API key
@@ -138,8 +139,32 @@ if prompt := st.chat_input("Send a message"):
                         r'(api_key\s*=\s*["\'].*?["\'])|'
                         r'(openai\.api_key\s*=\s*["\'].*?["\'])|'
                         r'(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
-
+                    # List files in the directory before executing the code
+                    before_execution = set(os.listdir())
                     exec(code_block_filtered)
+                    # List files in the directory after executing the code
+                    after_execution = set(os.listdir())
+                    new_file_extensions = ['.xlsx', '.mp4', '.pdf']
+                    # Identify newly created files with allowed extensions
+                    new_files = [file for file in after_execution - before_execution if any(file.endswith(ext) for ext in new_file_extensions)]
+
+                    if new_files:
+                        st.markdown("### Download New Files:")
+                        for new_file in new_files:
+                            file_extension = os.path.splitext(new_file)[1]  # Get the file extension
+                            mime_type = get_mime_type(file_extension)  # Function to get MIME type based on file extension
+                            st.download_button(
+                                label=f"Download {new_file}",
+                                data=open(new_file, "rb").read(),
+                                key=f"download-button-{new_file}",
+                                file_name=new_file,
+                                mime=mime_type,
+                            )
+                    else:
+                        st.write("No new files with allowed extensions were created.")
+
+
+
 
                     # Search for st.plotly_chart and other chart function calls in code_block_filtered
                     chart_matches = re.findall(r'st\.(plotly_chart|bar_chart)\((.*?)\)', code_block_filtered)
