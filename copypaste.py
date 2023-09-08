@@ -47,6 +47,8 @@ else:
 
 if "data" in st.session_state:
     data = st.session_state.data
+if "workbook" in st.session_state:
+    workbook = st.session_state.workbook
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
