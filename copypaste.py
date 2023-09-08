@@ -159,29 +159,7 @@ if prompt := st.chat_input("Send a message"):
                     # List files in the directory before executing the code
                     
                     exec(code_block_filtered)
-                    
-                    # List files in the directory after executing the code
-                    files_in_directory = os.listdir()
-
-                    # Define the allowed file extensions
-                    allowed_extensions = ['.xlsx', '.mp4', '.pdf']  # Add more extensions as needed
-
-                    # Filter files by allowed extensions
-                    filtered_files = [file for file in files_in_directory if any(file.endswith(ext) for ext in allowed_extensions)]
-                    st.write(filtered_files)
-
-                    # Display download links for filtered files in the sidebar
-                    if filtered_files:
-                        st.sidebar.markdown("### Download Files:")
-                        for file in filtered_files:
-                            file_extension = os.path.splitext(file)[1]
-                            st.sidebar.download_button(
-                                label=f"Download {file}",
-                                data=open(file, "rb").read(),
-                                key=f"download-button-{file}",
-                                file_name=file,
-                                mime=get_mime_type(file_extension),  # Use the get_mime_type function from previous responses
-                            )
+            
 
 
                     # Search for st.plotly_chart and other chart function calls in code_block_filtered
@@ -247,3 +225,25 @@ if uploaded_file:
         st.error("Unsupported file type")
     
 
+# List files in the directory after executing the code
+files_in_directory = os.listdir()
+
+# Define the allowed file extensions
+allowed_extensions = ['.xlsx', '.mp4', '.pdf']  # Add more extensions as needed
+
+# Filter files by allowed extensions
+filtered_files = [file for file in files_in_directory if any(file.endswith(ext) for ext in allowed_extensions)]
+st.write(filtered_files)
+
+# Display download links for filtered files in the sidebar
+if filtered_files:
+    st.sidebar.markdown("### Download Files:")
+    for file in filtered_files:
+        file_extension = os.path.splitext(file)[1]
+        st.sidebar.download_button(
+            label=f"Download {file}",
+            data=open(file, "rb").read(),
+            key=f"download-button-{file}",
+            file_name=file,
+            mime=get_mime_type(file_extension),  # Use the get_mime_type function from previous responses
+        )
