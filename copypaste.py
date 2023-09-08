@@ -157,36 +157,31 @@ if prompt := st.chat_input("Send a message"):
                         r'(openai\.api_key\s*=\s*["\'].*?["\'])|'
                         r'(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
                     # List files in the directory before executing the code
-                    before_execution = set(os.listdir())
-                    st.write(before_execution)
+                    
                     exec(code_block_filtered)
                     
                     # List files in the directory after executing the code
-                    after_execution = set(os.listdir())
-                    st.write(after_execution)
-                    new_file_extensions = ['.xlsx', '.mp4', '.pdf']
-                    # Identify newly created files with allowed extensions
-                    new_files = after_execution - before_execution
-                    st.write(new_files)
+                    files_in_directory = os.listdir()
 
-                    if new_files:
-                        st.sidebar.markdown("### Download New Files:")
-                        for new_file in new_files:
-                            file_extension = os.path.splitext(new_file)[1]  # Get the file extension
-                            st.write(file_extension)
-                            mime_type = get_mime_type(file_extension)  # Function to get MIME type based on file extension
-                            st.write(mim_type)
+                    # Define the allowed file extensions
+                    allowed_extensions = ['.xlsx', '.mp4', '.pdf']  # Add more extensions as needed
+
+                    # Filter files by allowed extensions
+                    filtered_files = [file for file in files_in_directory if any(file.endswith(ext) for ext in allowed_extensions)]
+                    st.write(filtered_files)
+
+                    # Display download links for filtered files in the sidebar
+                    if filtered_files:
+                        st.sidebar.markdown("### Download Files:")
+                        for file in filtered_files:
+                            file_extension = os.path.splitext(file)[1]
                             st.sidebar.download_button(
-                                label=f"Download {new_file}",
-                                data=open(new_file, "rb").read(),
-                                key=f"download-button-{new_file}",
-                                file_name=new_file,
-                                mime=mime_type,
+                                label=f"Download {file}",
+                                data=open(file, "rb").read(),
+                                key=f"download-button-{file}",
+                                file_name=file,
+                                mime=get_mime_type(file_extension),  # Use the get_mime_type function from previous responses
                             )
-                    else:
-                        st.write("No new files with allowed extensions were created.")
-
-
 
 
                     # Search for st.plotly_chart and other chart function calls in code_block_filtered
