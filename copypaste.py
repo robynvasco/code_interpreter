@@ -35,6 +35,18 @@ def extract_urls(text):
     url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     return re.findall(url_pattern, text)
 
+def get_mime_type(file_extension):
+    """Get the MIME type based on the file extension."""
+    mime_types = {
+        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        '.mp4': 'video/mp4',
+        '.pdf': 'application/pdf',
+        # Add more mappings for other file extensions as needed
+    }
+    
+    return mime_types.get(file_extension, 'application/octet-stream')  # Default to binary if not found
+
+
     
 # Title and description
 st.title("Data Analysis App")
