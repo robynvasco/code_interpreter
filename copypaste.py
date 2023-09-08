@@ -163,13 +163,15 @@ if prompt := st.chat_input("Send a message"):
                     after_execution = set(os.listdir())
                     new_file_extensions = ['.xlsx', '.mp4', '.pdf']
                     # Identify newly created files with allowed extensions
-                    new_files = [file for file in after_execution - before_execution if any(file.endswith(ext) for ext in new_file_extensions)]
+                    new_files = after_execution - before_execution
 
                     if new_files:
                         st.sidebar.markdown("### Download New Files:")
                         for new_file in new_files:
                             file_extension = os.path.splitext(new_file)[1]  # Get the file extension
+                            st.write(file_extension)
                             mime_type = get_mime_type(file_extension)  # Function to get MIME type based on file extension
+                            st.write(mim_type)
                             st.sidebar.download_button(
                                 label=f"Download {new_file}",
                                 data=open(new_file, "rb").read(),
