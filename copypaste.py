@@ -49,6 +49,9 @@ if "data" in st.session_state:
     data = st.session_state.data
 if "workbook" in st.session_state:
     workbook = st.session_state.workbook
+if "uploaded_file" in st.session_state:
+    uploaded_file = st.session_state.uploaded_file
+    
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_KEY"]
@@ -200,6 +203,7 @@ if uploaded_file:
     if uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
         data = pd.read_excel(uploaded_file)
         workbook = openpyxl.load_workbook(uploaded_file)
+        st.session_state.uploaded_file=uploaded_file
         st.session_state.workbook = workbook
         st.session_state.data = data
         # Update the system message when a file is uploaded
