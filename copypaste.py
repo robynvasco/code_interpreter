@@ -158,12 +158,16 @@ if prompt := st.chat_input("Send a message"):
                         r'(OPENAI_KEY\s*=\s*["\'].*?["\'])', '', code_block)
                     # List files in the directory before executing the code
                     before_execution = set(os.listdir())
+                    st.write(before_execution)
                     exec(code_block_filtered)
+                    
                     # List files in the directory after executing the code
                     after_execution = set(os.listdir())
+                    st.write(after_execution)
                     new_file_extensions = ['.xlsx', '.mp4', '.pdf']
                     # Identify newly created files with allowed extensions
                     new_files = after_execution - before_execution
+                    st.write(new_files)
 
                     if new_files:
                         st.sidebar.markdown("### Download New Files:")
